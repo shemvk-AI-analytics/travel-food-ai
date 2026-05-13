@@ -32,7 +32,21 @@
     </div>
 
     <script>
-        document.getElementById("city").innerText = "Paris - Score: 82";
+        const apiKey = "a8ff4a2cdd081a564248b837ec9d0b7c";
+const city = "Paris";
+
+fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+  .then(response => response.json())
+  .then(data => {
+    const temp = data.main.temp;
+    const weather = data.weather[0].description;
+
+    document.getElementById("city").innerText =
+      `${city} - ${temp}°C, ${weather}`;
+  })
+  .catch(error => {
+    document.getElementById("city").innerText = "Error loading data";
+  });
     </script>
 
 </body>
