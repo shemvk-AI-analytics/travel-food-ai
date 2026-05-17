@@ -58,6 +58,16 @@ function getFoodScore(city) {
     };
     return scores[city] || 80;
 }
+// generateInsight 
+    function generateInsight(city, temp, weather, travelScore, foodScore) {
+    if (travelScore > 80 && foodScore > 90) {
+        return `${city} shows strong overall appeal with favorable weather and excellent food culture.`;
+    }
+    if (travelScore > 70) {
+        return `${city} presents moderate travel conditions with reasonably supportive weather patterns.`;
+    }
+    return `${city} currently reflects limited travel comfort due to less favorable environmental conditions.`;
+}
 
 async function getCityData(city) {
     const response = await fetch(
