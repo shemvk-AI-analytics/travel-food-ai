@@ -1,8 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Travel & Food Insights Platform</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 20px auto;
+            width: 350px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🌍 Travel & Food Insights Platform</h1>
+<p>City Travel Insights based on real-time data</p>
+
+<div class="card">
+    <h2>City Travel Insights</h2>
+    <div id="city">Loading...</div>
+</div>
+
+<script>
 const apiKey = "a8ff4a2cdd081a564248b837ec9d0b7c";
 
 const cities = ["Paris", "Tokyo", "New York"];
 
-// Travel score
 function calculateTravelScore(temp) {
     if (temp >= 20 && temp <= 30) return 90;
     if (temp >= 10 && temp < 20) return 75;
@@ -10,7 +44,6 @@ function calculateTravelScore(temp) {
     return 50;
 }
 
-// Food score
 function getFoodScore(city) {
     const scores = {
         "Paris": 95,
@@ -20,7 +53,6 @@ function getFoodScore(city) {
     return scores[city] || 80;
 }
 
-// AI Insight function
 function generateInsight(city, temp, weather, travelScore, foodScore) {
     if (travelScore > 80 && foodScore > 90) {
         return city + " shows strong overall appeal with favorable weather and excellent food culture.";
@@ -28,7 +60,7 @@ function generateInsight(city, temp, weather, travelScore, foodScore) {
     if (travelScore > 70) {
         return city + " presents moderate travel conditions with reasonably supportive weather patterns.";
     }
-    return city + " currently reflects limited travel comfort due to less favorable environmental conditions.";
+    return city + " currently reflects limited travel comfort due to less favorable conditions.";
 }
 
 async function getCityData(city) {
@@ -77,3 +109,11 @@ async function loadData() {
 }
 
 loadData();
+</script>
+
+<p style="font-size:12px; color:gray;">
+Disclaimer: Indicators are generated using a custom model based on publicly available data. They are for informational purposes only and do not represent rankings or recommendations.
+</p>
+
+</body>
+</html>
