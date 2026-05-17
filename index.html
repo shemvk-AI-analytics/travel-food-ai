@@ -1,59 +1,103 @@
-const apiKey = "a8ff4a2cdd081a564248b837ec9d0b7c";
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Travel & Food Insights Platform</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 20px auto;
+            width: 350px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<h1>🌍 Travel & Food Insights Platform</h1>
+<p>City Travel Insights based on real-time data</p>
+
+<div class="card">
+    <h2>City Travel Insights</h2>
+    <div id="city">Loading...</div>
+</div>
+
+<script>
+const apiKey = "YOUR_API_KEY";
 
 const cities = ["Paris", "Tokyo", "New York"];
 
-// Travel score (based on weather)
+// Travel score based on weather
 function calculateTravelScore(temp) {
-  if (temp >= 20 && temp <= 30) return 90;
-  if (temp >= 10 && temp < 20) return 75;
-  if (temp > 30) return 60;
-  return 50;
+    if (temp >= 20 && temp <= 30) return 90;
+    if (temp >= 10 && temp < 20) return 75;
+    if (temp > 30) return 60;
+    return 50;
 }
 
-// Food score (simulated intelligence)
+// Food score (simple model)
 function getFoodScore(city) {
-  const foodScores = {
-    "Paris": 95,
-    "Tokyo": 98,
-    "New York": 90
-  };
-
-  return foodScores[city] || 80;
+    const scores = {
+        "Paris": 95,
+        "Tokyo": 98,
+        "New York": 90
+    };
+    return scores[city] || 80;
 }
 
 async function getCityData(city) {
-  const response = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
-  );
-  const data = await response.json();
+    const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
+    );
+    const data = await response.json();
 
-  const temp = data.main.temp;
-  const weather = data.weather[0].description;
+    if (data.cod !== 200) {
+        return city + ": Error loading data";
+    }
 
-  const travelScore = calculateTravelScore(temp);
-  const foodScore = getFoodScore(city);
+    const temp = data.main.temp;
+    const weather = data.weather[0].description;
 
-  // Combine both
-  const overallIndex = Math.round((travelScore * 0.6) + (foodScore * 0.4));
+    const travelScore = calculateTravelScore(temp);
+    const foodScore = getFoodScore(city);
 
-  return `
-    <b>${city}</b><br>
-    🌤 Weather: ${temp}°C, ${weather}<br>
-    🍽 Food Index: ${foodScore}<br>
-    ✈ Travel Index: ${travelScore}<br>
-    📊 Overall Insight Index: ${overallIndex}
-  `;
+    const overall = Math.round((travelScore * 0.6) + (foodScore * 0.4));
+
+    return `
+        <b>${city}</b><br>
+        🌤 ${temp}°C, ${weather}<br>
+        🍽 Food Index: ${foodScore}<br>
+        ✈ Travel Index: ${travelScore}<br>
+        📊 Composite Travel Indicator: ${overall}
+    `;
 }
 
 async function loadData() {
-  let results = [];
+    let results = [];
 
-  for (let city of cities) {
-    const result = await getCityData(city);
-    results.push(result);
-  }
+    for (let city of cities) {
+        const result = await getCityData(city);
+        results.push(result);
+    }
 
-  document.getElementById("city").innerHTML = results.join("<br><br>");
+    document.getElementById("city").innerHTML = results.join("<br><br>");
 }
 
 loadData();
+</script>
+
+<p style="font-size:12px; color:gray;">
+Disclaimer: Indicators are generated using a custom model based on publicly available data. They are for informational purposes only and do not represent rankings or recommendations.
+</p>
+
+</body>
+</html>
