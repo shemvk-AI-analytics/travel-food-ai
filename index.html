@@ -88,17 +88,14 @@ async function getCityData(city) {
 
     const overall = Math.round((travelScore * 0.6) + (foodScore * 0.4));
 
-    return `
-        <b>${city}</b><br>
-        🌤 ${temp}°C, ${weather}<br>
-        🌤 ${temp}°C, ${weather} (FR)<br>
-        🍽 Food Index: ${foodScore}<br>
-        🍽 Indice Gastronomique : ${foodScore}<br>
-        ✈ Travel Index: ${travelScore}<br>
-        ✈ Indice Voyage : ${travelScore}<br>
-        📊 Composite Travel Indicator: ${overall}<br>
-        📊 Indicateur Composite de Voyage : ${overall}
-    `;
+return `
+    <b>${city}</b><br>
+    🌤 ${temp}°C, ${weather}<br>
+    🍽 Food Index: ${foodScore}<br>
+    ✈ Travel Index: ${travelScore}<br>
+    📊 Composite Travel Indicator: ${overall}<br>
+    🤖 Insight: ${insight}
+`;
 }
 
 async function loadData() {
