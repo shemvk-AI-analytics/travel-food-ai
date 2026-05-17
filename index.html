@@ -24,17 +24,44 @@
 
 <body>
 
+<!-- ========================= -->
+<!--        ENGLISH BLOCK      -->
+<!-- ========================= -->
+
 <h1>🌍 Travel & Food Insights Platform</h1>
 <p>City Travel Insights based on real-time data</p>
 
 <div class="card">
     <h2>City Travel Insights</h2>
-    <div id="city">Loading...</div>
+    <div id="city-en">Loading...</div>
 </div>
+
+<p style="font-size:12px; color:gray;">
+Disclaimer: Indicators are generated using a custom model based on publicly available data. 
+They are for informational purposes only and do not represent rankings or recommendations.
+</p>
+
+<hr style="margin:40px 0;">
+
+<!-- ========================= -->
+<!--        FRENCH BLOCK       -->
+<!-- ========================= -->
+
+<h1>🌍 Plateforme d’Analyses Voyage & Gastronomie</h1>
+<p>Analyses de voyages urbains basées sur des données en temps réel</p>
+
+<div class="card">
+    <h2>Analyses des Villes</h2>
+    <div id="city-fr">Chargement...</div>
+</div>
+
+<p style="font-size:12px; color:gray;">
+Avertissement : Les indicateurs sont générés à l’aide d’un modèle personnalisé basé sur des données publiques. 
+Ils sont fournis à titre informatif uniquement et ne constituent ni un classement ni une recommandation.
+</p>
 
 <script>
 const apiKey = "a8ff4a2cdd081a564248b837ec9d0b7c";
-
 const cities = ["Paris", "Tokyo", "New York"];
 
 function calculateTravelScore(temp) {
@@ -53,7 +80,7 @@ function getFoodScore(city) {
     return scores[city] || 80;
 }
 
-function generateInsight(city, temp, weather, travelScore, foodScore) {
+function generateInsightEN(city, temp, weather, travelScore, foodScore) {
     if (travelScore > 80 && foodScore > 90) {
         return city + " shows strong overall appeal with favorable weather and excellent food culture.";
     }
@@ -61,6 +88,16 @@ function generateInsight(city, temp, weather, travelScore, foodScore) {
         return city + " presents moderate travel conditions with reasonably supportive weather patterns.";
     }
     return city + " currently reflects limited travel comfort due to less favorable conditions.";
+}
+
+function generateInsightFR(city, temp, weather, travelScore, foodScore) {
+    if (travelScore > 80 && foodScore > 90) {
+        return city + " présente un attrait global élevé avec une météo favorable et une excellente culture gastronomique.";
+    }
+    if (travelScore > 70) {
+        return city + " offre des conditions de voyage modérées avec une météo globalement favorable.";
+    }
+    return city + " reflète actuellement un confort de voyage limité en raison de conditions moins favorables.";
 }
 
 async function getCityData(city) {
@@ -72,7 +109,7 @@ async function getCityData(city) {
         const data = await response.json();
 
         if (data.cod !== 200) {
-            return city + ": Error loading data";
+            return { en: city + ": Error loading data", fr: city + " : Erreur lors du chargement des données" };
         }
 
         const temp = data.main.temp;
@@ -82,38 +119,46 @@ async function getCityData(city) {
         const foodScore = getFoodScore(city);
         const overall = Math.round((travelScore * 0.6) + (foodScore * 0.4));
 
-        const insight = generateInsight(city, temp, weather, travelScore, foodScore);
+        return {
+            en: `
+                <b>${city}</b><br>
+                🌤 ${temp}°C, ${weather}<br>
+                🍽 Food Index: ${foodScore}<br>
+                ✈ Travel Index: ${travelScore}<br>
+                📊 Composite Travel Indicator: ${overall}<br>
+                🤖 Insight: ${generateInsightEN(city, temp, weather, travelScore, foodScore)}
+            `,
+            fr: `
+                <b>${city}</b><br>
+                🌤 ${temp}°C, ${weather}<br>
+                🍽 Indice Gastronomique : ${foodScore}<br>
+                ✈ Indice Voyage : ${travelScore}<br>
+                📊 Indicateur Composite de Voyage : ${overall}<br>
+                🤖 Analyse : ${generateInsightFR(city, temp, weather, travelScore, foodScore)}
+            `
+        };
 
-        return `
-            <b>${city}</b><br>
-            🌤 ${temp}°C, ${weather}<br>
-            🍽 Food Index: ${foodScore}<br>
-            ✈ Travel Index: ${travelScore}<br>
-            📊 Composite Travel Indicator: ${overall}<br>
-            🤖 Insight: ${insight}
-        `;
     } catch (error) {
-        return city + ": Error fetching data";
+        return { en: city + ": Error fetching data", fr: city + " : Erreur lors de la récupération des données" };
     }
 }
 
 async function loadData() {
-    let results = [];
+    let englishResults = [];
+    let frenchResults = [];
 
     for (let city of cities) {
         const result = await getCityData(city);
-        results.push(result);
+        englishResults.push(result.en);
+        frenchResults.push(result.fr);
     }
 
-    document.getElementById("city").innerHTML = results.join("<br><br>");
+    document.getElementById("city-en").innerHTML = englishResults.join("<br><br>");
+    document.getElementById("city-fr").innerHTML = frenchResults.join("<br><br>");
 }
 
 loadData();
 </script>
-
-<p style="font-size:12px; color:gray;">
-Disclaimer: Indicators are generated using a custom model based on publicly available data. They are for informational purposes only and do not represent rankings or recommendations.
-</p>
 
 </body>
 </html>
